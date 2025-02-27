@@ -1,24 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vote
+  name: voting-app-deploy
+  labels:
+    name: voting-app-deploy
+    app: demo-voting-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: vote
+      name: voting-app-pod
+      app: demo-voting-app
+
   template:
     metadata:
+      name: voting-app-pod
       labels:
-        app: vote
+        name: voting-app-pod
+        app: demo-voting-app
     spec:
       containers:
-        - name: vote
+        - name: voting-app
           image: eesprit/voting-app-vote
           resources:
             limits:
               memory: "128Mi"
-              cpu: "500m"
+              cpu: "250m"
           ports:
             - containerPort: 80
           env:

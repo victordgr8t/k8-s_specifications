@@ -2,36 +2,43 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: db
+  labels:
+    name: db
+    app: demo-voting-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: db
+      name: postgres-pod
+      app: demo-voting-app
+
   template:
     metadata:
+      name: postgres-pod
       labels:
-        app: db
+        name: postgres-pod
+        app: demo-voting-app
     spec:
       containers:
-        - name: db
-          image: postgres:14
+        - name: postgres-db
+          image: postgres:9.4
           resources:
             limits:
               memory: "512Mi"
-              cpu: "500m"
-          envFrom:
-            - secretRef:
-                name: db-secret
+              cpu: "250m"
           env:
-            - name: POSTGRES_HOST_AUTH_METHOD
-              value: trust
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
           ports:
             - containerPort: 5432
-          volumeMounts:
-            - name: postgres-data
-              mountPath: /var/lib/postgresql/data  # Default path used by PostgreSQL
-      volumes:
-        - name: postgres-data
-          emptyDir: {}
+          
             
 
