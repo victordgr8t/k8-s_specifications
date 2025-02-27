@@ -1,8 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: result
   name: result
 spec:
   replicas: 1
@@ -15,15 +13,17 @@ spec:
         app: result
     spec:
       containers:
-      - image: eesprit/voting-app-result
-        name: result
-        resources:
-          limits:
-            cpu: 100m
-            memory: 128Mi
-          requests:
-            cpu: 100m
-            memory: 128Mi
-        ports:
-        - containerPort: 80
-          name: result
+        - name: result
+          image: eesprit/voting-app-result
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          ports:
+            - containerPort: 80
+          env:
+            - name: DB_HOST
+              value: db

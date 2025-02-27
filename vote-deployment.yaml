@@ -1,8 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: vote
   name: vote
 spec:
   replicas: 1
@@ -15,15 +13,15 @@ spec:
         app: vote
     spec:
       containers:
-      - image: eesprit/voting-app-vote
-        name: vote
-        resources:
-          limits:
-            cpu: 100m
-            memory: 128Mi
-          requests:
-            cpu: 100m
-            memory: 128Mi
-        ports:
-        - containerPort: 80
-          name: vote
+        - name: vote
+          image: eesprit/voting-app-vote
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 80
+          env:
+            - name: REDIS_HOST
+              value: redis
+

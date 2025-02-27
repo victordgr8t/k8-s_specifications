@@ -1,8 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: worker
   name: worker
 spec:
   replicas: 1
@@ -15,12 +13,14 @@ spec:
         app: worker
     spec:
       containers:
-      - image: eesprit/voting-app-worker
-        name: worker
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-          limits:
-            cpu: 100m
-            memory: 100Mi
+        - name: worker
+          image: eesprit/voting-app-worker
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          env:
+            - name: REDIS_HOST
+              value: redis
+            - name: DB_HOST
+              value: db
